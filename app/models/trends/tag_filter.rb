@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class TagFilter
+class Trends::TagFilter
   KEYS = %i(
     trending
     status

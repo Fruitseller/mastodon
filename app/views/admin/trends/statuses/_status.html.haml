@@ -1,0 +1,24 @@
+.batch-table__row{ class: [status.account.requires_review? && 'batch-table__row--attention', !status.account.requires_review? && !status.trendable? && 'batch-table__row--muted'] }
+  %label.batch-table__row__select.batch-table__row__select--aligned.batch-checkbox
+    = f.check_box :status_ids, { multiple: true, include_hidden: false }, status.id
+
+  .batch-table__row__content
+    .status__content= Formatter.instance.format(status, custom_emojify: true)
+
+    .detailed-status__meta
+      = admin_account_link_to status.account
+      •
+      = link_to ActivityPub::TagManager.instance.url_for(status), class: 'detailed-status__datetime', target: '_blank', rel: 'noopener noreferrer' do
+        %time.formatted{ datetime: status.created_at.iso8601, title: l(status.created_at) }= l(status.created_at)
+        - if status.edited?
+          %abbr{ title: t('statuses.edited_at', date: l(status.edited_at.to_date)) }
+            *
+      - if status.language.present?
+        •
+        = human_locale(status.language)
+      - if status.trendable? && (rank = Trends.statuses.rank(status.id))
+        •
+        %abbr{ title: t('admin.trends.tags.current_score', score: Trends.statuses.score(status.id)) }= t('admin.trends.tags.trending_rank', rank: rank + 1)
+      - elsif status.account.requires_review?
+        •
+        = t('admin.trends.pending_review')

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class PreviewCardProviderFilter
+class Trends::PreviewCardProviderFilter
   KEYS = %i(
     status
   ).freeze
